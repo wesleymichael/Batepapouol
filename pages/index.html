@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' type='text/css' media='screen' href='../css/reset.css'>
+        <link rel='stylesheet' type='text/css' media='screen' href='../css/style.css'>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="text/javascript" src="../script.js"></script>
+        <title>Bate-papo UOL</title>
+    </head>
+    <body>
+        <div class="input-screen">
+            <img class="img-uol" src="../img/uol.png" alt="uol">
+            <div class="login">
+                <input type="text" placeholder="Digite seu nome">
+                <button type="submit" name="button" onclick="logIn()" disabled>Entrar</button>
+            </div>
+        </div>
+
+        <script>
+            /**** Adicionar o evento que dispara quando o valor do input é alterado ****/
+            const input = document.querySelector('input');
+            input.addEventListener('input', validateInput);
+
+
+            document.addEventListener("keypress", function(e) {
+                if( e.key === "Enter"){
+                    document.querySelector('button').click();
+                }
+            });
+
+        </script>
+    </body>
+</html>
