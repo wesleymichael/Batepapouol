@@ -2,7 +2,6 @@
 
 *{
     font-family: 'Roboto', sans-serif;
-    font-weight: 400;
     font-style: normal;
     box-sizing: border-box;
     font-size: 18px;
@@ -38,7 +37,7 @@
     margin-bottom: 15px;
 }
 
-input::placeholder{
+.login input::placeholder{
     opacity: 0.5;
 }
 
@@ -57,4 +56,82 @@ input::placeholder{
     color: #696969;
     cursor: auto;   
 }
+
+
+/****  Estilização do chat  ****/
+header, footer{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    position: fixed;
+    left: 0;
+    z-index: 2;
+    background-color: #FFFFFF;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+header{
+    top: 0;
+}
+
+footer{
+    bottom: 0;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+header ion-icon{
+    font-size: 45px;
+}
+
+footer ion-icon{
+    font-size: 25px;
+}
+
+footer input{
+    resize: none;
+    color: #000000;
+    opacity: 1;
+    width: 90%;
+}
+
+
+/**** Mensagens no chat ****/
+.conversation{
+    position: relative;
+    top: 80px;
+    left: 0;
+    padding-top: 25px;
+}
+
+.msg{
+    border-radius: 2px;
+    padding: 12px 5px;
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.status{
+    background-color: #DCDCDC;
+}
+
+.message{
+    background-color: #FFFFFF;
+}
+
+.private-message{
+    background-color: #FFDEDE;
+}
+
+.time{
+    color: #AAAAAA;
+    padding: 2px;
+}
+
 
