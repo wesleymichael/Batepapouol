@@ -70,15 +70,16 @@ header, footer{
     left: 0;
     z-index: 2;
     background-color: #FFFFFF;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 header{
     top: 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 footer{
     bottom: 0;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
 }
 
 ::-webkit-scrollbar{
@@ -105,8 +106,8 @@ footer input{
 .conversation{
     position: relative;
     top: 80px;
-    left: 0;
     padding-top: 25px;
+    padding-bottom: 80px;
 }
 
 .msg{
