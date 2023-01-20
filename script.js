@@ -48,7 +48,6 @@ function events(){
 }
 
 
-
 function hideNav(){
     const hide = document.querySelector('.nav');
     hide.classList.remove('nav');
@@ -62,6 +61,73 @@ function navUsers(){
     aux.classList.remove('display-hide');
     aux.classList.add('nav');
 }
+
+
+/**** Em caso de sucesso atualizar o chat ****/
+function sendSucess(){
+    loadMessages();
+}
+
+function sendError(erro){
+    alert('Ocorreu um erro inexperado.')
+    window.location.reload()
+}
+
+
+
+function sendMessage(){
+    const text = document.querySelector('footer input').value;
+
+    const dados = {
+        'from': userName,
+        'to': to,
+        'text': text,
+        'type': type,
+    }
+    console.log(dados)
+
+    const promise = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', dados);
+    promise.then(sendSucess);
+    promise.catch(sendError);
+}
+
+
+
+function renderUsersOnline(){
+    let listUsers = document.querySelector('.users');
+    listUsers.innerHTML = `
+        <li onclick="selectUser(this)" class='selecionado'>
+            <ion-icon name="people"></ion-icon>
+            <span>Todos</span>
+            <ion-icon name="checkmark-sharp"></ion-icon>
+        </li>
+    `
+    for (let i = 0; i < usersOnline.length; i++){
+        listUsers.innerHTML += `
+        <li onclick="selectUser(this)">
+            <ion-icon name="person-circle"></ion-icon>
+            <span>${usersOnline[i].name}</span>
+            <ion-icon name="checkmark-sharp"></ion-icon>
+        </li>  
+        `
+    }
+}
+
+
+
+/**** Função para obter a lista de participantes ativos no chat ****/
+function loadUsersSucess(sucess){
+    usersOnline = sucess.data;
+    //Toda vez que atualizar, renderizo a lista de usuários dinamicamente
+    renderUsersOnline();
+}
+
+function loadUsers(){
+    const promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
+    promise.then(loadUsersSucess);
+}
+
+
 
 
 /**** Função para renderizar as mensagens que estão no servidor ****/
@@ -91,20 +157,23 @@ function loadMessagesSucess(sucess){
                 <span>${message[i].text}</span>
             </div>`;
         }
-        else if (message[i].type === 'private_message' && message[i].to === userName){
-            conversation.innerHTML += `
-            <div class="msg private-message">
-                <span class="time">(${message[i].time})</span>
-                <strong class="from">${message[i].from}</strong>
-                <span>reservadamente para</span>
-                <strong class="to">${message[i].to}:</strong>
-                <span>${message[i].text}</span>
-            </div>`;
+        else if (message[i].type === 'private_message'){
+            if(message[i].to === userName || message[i].to === 'Todos'){
+                conversation.innerHTML += `
+                <div class="msg private_message">
+                    <span class="time">(${message[i].time})</span>
+                    <strong class="from">${message[i].from}</strong>
+                    <span>reservadamente para</span>
+                    <strong class="to">${message[i].to}:</strong>
+                    <span>${message[i].text}</span>
+                </div>`;
+            }
         }
     }
     document.querySelector('.conversation div:last-child').scrollIntoView();
     //scrollIntoView    
 }
+
 
 
 /**** Função para carregar as mensagens do servidor ****/
@@ -133,33 +202,18 @@ function loadPage(){
         <div class="dark" onclick="hideNav()"></div>
         <div class="conteudo">
             <div class="info">Escolha um contato para enviar mensagem:</div>
-            <ul class='users'>
-                <li onclick="selectUser(this)" class='selecionado'>
-                    <ion-icon name="people"></ion-icon>
-                    <span>Todos</span>
-                    <ion-icon name="checkmark-sharp"></ion-icon>
-                </li>
-                <li onclick="selectUser(this)">
-                    <ion-icon name="person-circle"></ion-icon>
-                    <span>Maria</span>
-                    <ion-icon name="checkmark-sharp"></ion-icon>
-                </li>
-                <li onclick="selectUser(this)">
-                    <ion-icon name="person-circle"></ion-icon>
-                    <span>Pedro</span>
-                    <ion-icon name="checkmark-sharp"></ion-icon>
-                </li>       
+            <ul class='users'>      
             </ul>
             <div class="info">Escolha a visibilidade:</div>
             <ul class='visibility'>
                 <li onclick="selectVisibility(this, 'message')" class='selecionado'>
                     <ion-icon name="lock-open"></ion-icon>
-                    Público
+                    <span>Público</span>
                     <ion-icon name="checkmark-sharp"></ion-icon>
                 </li>
-                <li onclick="selectVisibility(this, 'private-message')">
+                <li onclick="selectVisibility(this, 'private_message')">
                     <ion-icon name="lock-closed"></ion-icon>
-                    Reservadamente
+                    <span>Reservadamente</span>
                     <ion-icon name="checkmark-sharp"></ion-icon>
                 </li>
             </ul>
@@ -167,22 +221,13 @@ function loadPage(){
     </div>
     <footer>
         <input type="text" placeholder="Escreva aqui...">
-        <ion-icon name="paper-plane-outline"></ion-icon>
+        <button type="text" onclick="sendMessage()">
+            <ion-icon name="paper-plane-outline"></ion-icon>
+        </button>
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     `
-}
-
-
-/**** Função para obter a lista de participantes ativos no chat ****/
-function loadUsersSucess(sucess){
-    usersOnline = sucess.data;
-}
-
-function loadUsers(){
-    const promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
-    promise.then(loadUsersSucess);
 }
 
 
@@ -195,12 +240,11 @@ function userLogged(){
 function enterChat(){
 
     setInterval(userLogged, 5000);
-    loadUsers();
-    setInterval(loadUsers, 10000);
     loadPage();
     loadMessages();
     setInterval(loadMessages, 3000);
-    
+    loadUsers();
+    setInterval(loadUsers, 10000);
 }
 
 

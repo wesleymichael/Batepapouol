@@ -90,7 +90,7 @@ header ion-icon{
     font-size: 45px;
 }
 
-header button{
+header button, footer button{
     background-color: rgb(255, 255, 255, 1);
     border: none;
 }
@@ -123,6 +123,7 @@ footer input{
     margin-bottom: 5px;
     font-size: 15px;
     line-height: 20px;
+    word-break: break-word;
 }
 
 .status{
@@ -133,7 +134,7 @@ footer input{
     background-color: #FFFFFF;
 }
 
-.private-message{
+.private_message{
     background-color: #FFDEDE;
 }
 
@@ -150,7 +151,7 @@ footer input{
     top: 0;
     left: 0vw;
     z-index: 5;
-    height: 100vh;
+    height: 101vh;
     width: 100vw;
 }
 
@@ -188,7 +189,7 @@ footer input{
 }
 
 .conteudo .info{
-    height: 85px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -197,9 +198,12 @@ footer input{
     line-height: 19px;
     font-weight: 700;
     padding: 0 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-
+.conteudo ul span{
+    width: 75%;
+}
 
 /**** Seleção do parrticipante ****/
 ul li ion-icon:last-child{
@@ -208,8 +212,8 @@ ul li ion-icon:last-child{
 
 .selecionado ion-icon:last-child{
     display: flex;
-    position: absolute;
-    right: 0;
+    position: relative;
+    right:0; 
     color: #28BB25;
     font-size: 15px;
     font-weight: 900;
