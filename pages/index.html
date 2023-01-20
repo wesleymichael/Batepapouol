@@ -20,18 +20,8 @@
                 <button type="submit" name="button" onclick="logIn()" disabled>Entrar</button>
             </div>
         </div>
-
         <script>
-            /**** Adicionar o evento que dispara quando o valor do input é alterado ****/
-            const input = document.querySelector('input');
-            input.addEventListener('input', validateInput);
-
-            document.addEventListener("keypress", function(e) {
-                if( e.key === "Enter"){
-                    document.querySelector('button').click();
-                }
-            });
-
+            events();
         </script>
         <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
