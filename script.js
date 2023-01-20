@@ -13,8 +13,7 @@ function messageRecipient(recipient){
 function publicORprivate(){
     if(type === 'private_message'){
         return 'reservadamente';
-    }
-    else{
+    } else{
         return 'publicamente';
     }
 }
@@ -22,7 +21,7 @@ function publicORprivate(){
 
 /**** Função para atualizar o rodapé ****/
 function updatefooter(){
-    let rodape = document.querySelector('footer');
+    const rodape = document.querySelector('footer');
 
     if(to !== 'Todos'){
         rodape.innerHTML = `
@@ -33,9 +32,8 @@ function updatefooter(){
         <button type="text" onclick="sendMessage()" data-test="send-message">
             <ion-icon name="paper-plane-outline"></ion-icon>
         </button>
-        `
-    }
-    else{
+        `;
+    } else{
         rodape.innerHTML = `
         <footer>
             <input type="text" placeholder="Escreva aqui..." data-test="input-message">
@@ -47,16 +45,17 @@ function updatefooter(){
     }
 }
 
+
 /**** Função que remove a classe 'selecionado' do item anteriormente selecionado e adicionada ao novo item ****/
 function selectUser(select){
     const user = document.querySelector('.users .selecionado');
     user.classList.remove('selecionado');
 
     select.classList.add('selecionado');
-    
+
     //Atualizar o novo do remetente
-    const to = document.querySelector('.users .selecionado span');
-    messageRecipient(to.innerHTML);
+    const destinatario = document.querySelector('.users .selecionado span');
+    messageRecipient(destinatario.innerHTML);
 
     //Atualiza o rodapé
     updatefooter();
@@ -132,7 +131,7 @@ function sendMessage(){
         'to': to,
         'text': text,
         'type': type,
-    }
+    };
 
     const promise = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', dados);
     promise.then(sendSucess);
@@ -144,7 +143,7 @@ function sendMessage(){
 function updateRecipient(){
     for(let i = 0; i < usersOnline.length; i++){
         if(usersOnline[i].name === to){
-            return to;
+            return;
         }
     }
     to = 'Todos';
@@ -152,8 +151,11 @@ function updateRecipient(){
 
 
 function renderUsersOnline(){
-    let listUsers = document.querySelector('.users');
-    updateRecipient();                                              //Função para atualizar o destinatário
+    const listUsers = document.querySelector('.users');
+
+    //Função para atualizar o destinatário
+    updateRecipient();
+
     let todosSelecionado = '';
     if (to === 'Todos'){
         todosSelecionado = 'selecionado';
@@ -182,8 +184,7 @@ function renderUsersOnline(){
                     <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
                 </li>  
                 `;
-            }
-            else{
+            } else{
                 listUsers.innerHTML += `
                 <li onclick="selectUser(this)" data-test="participant">
                     <div>
@@ -215,7 +216,7 @@ function loadUsers(){
 /**** Função para renderizar as mensagens que estão no servidor ****/
 function loadMessagesSucess(sucess){
     const message = sucess.data;
-    let conversation = document.querySelector('.conversation');
+    const conversation = document.querySelector('.conversation');
 
     conversation.innerHTML = '';
 
@@ -229,8 +230,8 @@ function loadMessagesSucess(sucess){
                 <strong class="from">${message[i].from}</strong>
                 <span>${message[i].text}</span>
             </div>`;
-        }
-        else if(message[i].type === 'message'){
+
+        } else if(message[i].type === 'message'){
             conversation.innerHTML += `
             <div class="msg message" data-test="message">
                 <span class="time">(${message[i].time})</span>
@@ -239,8 +240,8 @@ function loadMessagesSucess(sucess){
                 <strong class="to">${recipient}:</strong>
                 <span>${message[i].text}</span>
             </div>`;
-        }
-        else if (message[i].type === 'private_message'){
+
+        } else if (message[i].type === 'private_message'){
             //Renderização da mensagem privada apenas se for destinada ao Usuário ou enviada por
             if(recipient === userName || recipient === 'Todos' || message[i].from === userName){
                 conversation.innerHTML += `
@@ -277,7 +278,7 @@ function loadMessages(){
 /**** Função para carregar o layout da página do bate papo ****/
 function loadPage(){
     const page = document.querySelector('body');
-    
+
     page.innerHTML = `
     <header>
         <img src="../img/uol.png" alt="uol">
@@ -320,7 +321,7 @@ function loadPage(){
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    `
+    `;
 }
 
 
@@ -393,7 +394,8 @@ function logIn(){
 /**** Função para habilitar o botão quando for digitado pelo menos 3 caracteres ****/
 function validateInput({target}){
     const button = document.querySelector('button');
-    if(target.value.length > 2){
+    const minLength = 3;
+    if(target.value.length >= minLength){
         button.removeAttribute('disabled');
         return;
     }
@@ -404,7 +406,7 @@ function validateInput({target}){
 /**** Click com a tecla ENTER ****/
 function loginEnter(){
     const obj = document.querySelector('.login button');
-    let tecla = event.key; 
+    const tecla = event.key;
     if (tecla === 'Enter'){
         obj.click();
     }

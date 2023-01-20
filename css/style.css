@@ -7,57 +7,6 @@
     font-size: 18px;
 }
 
-.input-screen, .login{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.img-uol{
-    width: 130px;
-    height: 92px;
-    margin-bottom: 94px;
-    margin-top: 15vh;
-}
-
-.login span{
-    padding-top: 15px;
-    font-weight: 500;
-    font-size: 18px;
-}
-
-.login input{
-    width: 261px;
-    height: 54px;
-    background: #FFFFFF;
-    border: 1px solid #D7D7D7;
-    border-radius: 4px;
-    text-align: center;
-    color: #AEAEAE;
-    margin-bottom: 15px;
-}
-
-.login input::placeholder{
-    opacity: 0.5;
-}
-
-.login button{
-    width: 109px;
-    height: 45px;
-    align-items: center;
-    border: none;
-    background: #ec373c;
-    border-radius: 9px;
-    color: #e4e4e4;
-}
-
-.login button:disabled{
-    background: #E7E7E7;
-    color: #696969;
-    cursor: auto;   
-}
-
-
 /****  Estilização do chat  ****/
 header, footer{
     width: 100%;
@@ -144,6 +93,21 @@ footer input{
 }
 
 
+/**** Estilização do rodapé para mensagem privada ****/
+.reservado input{
+    height: 30px;
+}
+
+.reservado input::placeholder{
+    color: #000000;
+}
+
+.reservado span{
+    color: #a1a0a0;
+    font-size: 15px;
+}
+
+
 /**** Estilização da barra de participantes ****/
 @keyframes menu-lateral{
     from {
@@ -206,10 +170,12 @@ footer input{
     height: 36px;
     padding: 0 10px;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .conteudo ul ion-icon{
     padding-right: 5px;
+    font-size: 20px;
 }
 
 .conteudo ul{
@@ -231,10 +197,18 @@ footer input{
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+.users div{
+    display: flex;
+    align-items: center;
+}
 
 /**** Seleção do participante ****/
 ul li ion-icon:last-child{
     display: none;
+}
+
+.selecionado{
+    background-color: #eeeeee;
 }
 
 .selecionado ion-icon:last-child{
@@ -247,16 +221,53 @@ ul li ion-icon:last-child{
 }
 
 
-/**** Estilização do rodapé para mensagem privada ****/
-.reservado input{
-    height: 30px;
+/**** Estilização da tela de login ****/
+.input-screen, .login{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.reservado input::placeholder{
-    color: #000000;
+.img-uol{
+    width: 130px;
+    height: 92px;
+    margin-bottom: 94px;
+    margin-top: 15vh;
 }
 
-.reservado span{
-    color: #a1a0a0;
-    font-size: 15px;
+.login span{
+    padding-top: 15px;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.login input{
+    width: 261px;
+    height: 54px;
+    background: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    border-radius: 4px;
+    text-align: center;
+    color: #AEAEAE;
+    margin-bottom: 15px;
+}
+
+.login input::placeholder{
+    opacity: 0.5;
+}
+
+.login button{
+    width: 109px;
+    height: 45px;
+    align-items: center;
+    border: none;
+    background: #ec373c;
+    border-radius: 9px;
+    color: #e4e4e4;
+}
+
+.login button:disabled{
+    background: #E7E7E7;
+    color: #696969;
+    cursor: auto;   
 }
