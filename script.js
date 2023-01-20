@@ -20,6 +20,7 @@ function publicORprivate(){
 }
 
 
+/**** Função para atualizar o rodapé ****/
 function updatefooter(){
     let rodape = document.querySelector('footer');
 
@@ -27,7 +28,7 @@ function updatefooter(){
         rodape.innerHTML = `
         <div class="reservado">
             <input type="text" placeholder="Escreva aqui..." data-test="input-message">
-            <span>Enviado para ${to} (${publicORprivate()})</span>
+            <span data-test="recipient">Enviado para ${to} (${publicORprivate()})</span>
         </div>
         <button type="text" onclick="sendMessage()" data-test="send-message">
             <ion-icon name="paper-plane-outline"></ion-icon>
@@ -95,8 +96,15 @@ function hideNav(){
 
 /**** Função para mostrar a barra de navegação com informações do usuário ****/
 function navUsers(){
-    const show = document.querySelector('.display-hide');
-    show.classList.remove('display-hide');
+    let show = document.querySelector('.display-hide');
+    if(show !== null){
+        show.classList.remove('display-hide');
+        show.classList.add('nav');
+        return;
+    }
+    //Se for a primeira execução, a classe que existe no menu lateral é 'display-none'
+    show = document.querySelector('.display-none');
+    show.classList.remove('display-none');
     show.classList.add('nav');
 }
 
@@ -279,7 +287,7 @@ function loadPage(){
     </header>
     <div class="conversation">
     </div>
-    <div class="display-hide">
+    <div class="display-none">
         <div class="dark" onclick="hideNav()" data-test="overlay"></div>
         <div class="conteudo">
             <div class="info">Escolha um contato para enviar mensagem:</div>
