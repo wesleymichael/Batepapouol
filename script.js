@@ -10,6 +10,42 @@ function messageRecipient(recipient){
 }
 
 
+function publicORprivate(){
+    if(type === 'private_message'){
+        return 'reservadamente';
+    }
+    else{
+        return 'publicamente';
+    }
+}
+
+
+function updatefooter(){
+    let rodape = document.querySelector('footer');
+
+    if(to !== 'Todos'){
+        rodape.innerHTML = `
+        <div class="reservado">
+            <input type="text" placeholder="Escreva aqui..." data-test="input-message">
+            <span>Enviado para ${to} (${publicORprivate()})</span>
+        </div>
+        <button type="text" onclick="sendMessage()" data-test="send-message">
+            <ion-icon name="paper-plane-outline"></ion-icon>
+        </button>
+        `
+    }
+    else{
+        rodape.innerHTML = `
+        <footer>
+            <input type="text" placeholder="Escreva aqui..." data-test="input-message">
+            <button type="text" onclick="sendMessage()" data-test="send-message">
+                <ion-icon name="paper-plane-outline"></ion-icon>
+            </button>
+        </footer>
+        `;
+    }
+}
+
 /**** Função que remove a classe 'selecionado' do item anteriormente selecionado e adicionada ao novo item ****/
 function selectUser(select){
     const user = document.querySelector('.users .selecionado');
@@ -20,6 +56,9 @@ function selectUser(select){
     //Atualizar o novo do remetente
     const to = document.querySelector('.users .selecionado span');
     messageRecipient(to.innerHTML);
+
+    //Atualiza o rodapé
+    updatefooter();
 }
 
 function selectVisibility(select, messageType){
@@ -30,6 +69,9 @@ function selectVisibility(select, messageType){
 
     //Atualização da variável global que tem o tipo de mensagem selecionada (pública ou privada)
     type = messageType;
+
+    //Atualiza o rodapé
+    updatefooter();
 }
 
 
@@ -90,28 +132,61 @@ function sendMessage(){
 }
 
 
+/**** Função para atualizar o destinatário da mensagem, caso ele tenha saido da sala ****/
+function updateRecipient(){
+    for(let i = 0; i < usersOnline.length; i++){
+        if(usersOnline[i].name === to){
+            return to;
+        }
+    }
+    to = 'Todos';
+}
+
 
 function renderUsersOnline(){
     let listUsers = document.querySelector('.users');
+    updateRecipient();                                              //Função para atualizar o destinatário
+    let todosSelecionado = '';
+    if (to === 'Todos'){
+        todosSelecionado = 'selecionado';
+    }
     listUsers.innerHTML = `
-        <li onclick="selectUser(this)" class='selecionado'>
+        <li onclick="selectUser(this)" class='${todosSelecionado}' data-test="all">
             <div>
                 <ion-icon name="people"></ion-icon>
                 <span>Todos</span>
             </div>
-            <ion-icon name="checkmark-sharp"></ion-icon>
+            <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
         </li>
-    `
+    `;
     for (let i = 0; i < usersOnline.length; i++){
-        listUsers.innerHTML += `
-        <li onclick="selectUser(this)">
-            <div>
-                <ion-icon name="person-circle"></ion-icon>
-                <span>${usersOnline[i].name}</span>
-            </div>
-            <ion-icon name="checkmark-sharp"></ion-icon>
-        </li>  
-        `
+        const usuario = usersOnline[i].name;
+
+        //Remover o próprio nome da lista de participantes ativos
+        if(usuario !== userName){
+            if (usuario === to){
+                listUsers.innerHTML += `
+                <li onclick="selectUser(this)" class="selecionado" data-test="participant">
+                    <div>
+                        <ion-icon name="person-circle"></ion-icon>
+                        <span>${usuario}</span>
+                    </div>
+                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+                </li>  
+                `;
+            }
+            else{
+                listUsers.innerHTML += `
+                <li onclick="selectUser(this)" data-test="participant">
+                    <div>
+                        <ion-icon name="person-circle"></ion-icon>
+                        <span>${usuario}</span>
+                    </div>
+                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+                </li>  
+                `;
+            }
+        }
     }
 }
 
@@ -137,9 +212,11 @@ function loadMessagesSucess(sucess){
     conversation.innerHTML = '';
 
     for(let i = 0; i < message.length; i++){
+        const recipient = message[i].to;
+
         if(message[i].type === 'status'){
             conversation.innerHTML += `
-            <div class="msg status">
+            <div class="msg status" data-test="message">
                 <span class="time">(${message[i].time})</span>
                 <strong class="from">${message[i].from}</strong>
                 <span>${message[i].text}</span>
@@ -147,19 +224,19 @@ function loadMessagesSucess(sucess){
         }
         else if(message[i].type === 'message'){
             conversation.innerHTML += `
-            <div class="msg message">
+            <div class="msg message" data-test="message">
                 <span class="time">(${message[i].time})</span>
                 <strong class="from">${message[i].from}</strong>
                 <span>para</span>
-                <strong class="to">${message[i].to}:</strong>
+                <strong class="to">${recipient}:</strong>
                 <span>${message[i].text}</span>
             </div>`;
         }
         else if (message[i].type === 'private_message'){
-            //Renderização da mensagem privada apenas se for destinada ao Usuário
-            if(message[i].to === userName || message[i].to === 'Todos'){
+            //Renderização da mensagem privada apenas se for destinada ao Usuário ou enviada por
+            if(recipient === userName || recipient === 'Todos' || message[i].from === userName){
                 conversation.innerHTML += `
-                <div class="msg private_message">
+                <div class="msg private_message" data-test="message">
                     <span class="time">(${message[i].time})</span>
                     <strong class="from">${message[i].from}</strong>
                     <span>reservadamente para</span>
@@ -196,40 +273,40 @@ function loadPage(){
     page.innerHTML = `
     <header>
         <img src="../img/uol.png" alt="uol">
-        <button type="text" onclick="navUsers()">
+        <button type="text" onclick="navUsers()" data-test="open-participants">
             <ion-icon name="people"></ion-icon>
         </button>
     </header>
     <div class="conversation">
     </div>
     <div class="display-hide">
-        <div class="dark" onclick="hideNav()"></div>
+        <div class="dark" onclick="hideNav()" data-test="overlay"></div>
         <div class="conteudo">
             <div class="info">Escolha um contato para enviar mensagem:</div>
             <ul class='users'>      
             </ul>
             <div class="info">Escolha a visibilidade:</div>
             <ul class='visibility'>
-                <li onclick="selectVisibility(this, 'message')" class='selecionado'>
+                <li onclick="selectVisibility(this, 'message')" class='selecionado' data-test="public">
                     <div>
                         <ion-icon name="lock-open"></ion-icon>
                         <span>Público</span>
                     </div>
-                    <ion-icon name="checkmark-sharp"></ion-icon>
+                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
                 </li>
-                <li onclick="selectVisibility(this, 'private_message')">
+                <li onclick="selectVisibility(this, 'private_message')" data-test="private">
                     <div>
                         <ion-icon name="lock-closed"></ion-icon>
                         <span>Reservadamente</span>
                     </div>
-                    <ion-icon name="checkmark-sharp"></ion-icon>
+                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
                 </li>
             </ul>
         </div>
     </div>
     <footer>
-        <input type="text" placeholder="Escreva aqui...">
-        <button type="text" onclick="sendMessage()">
+        <input type="text" placeholder="Escreva aqui..." data-test="input-message">
+        <button type="text" onclick="sendMessage()" data-test="send-message">
             <ion-icon name="paper-plane-outline"></ion-icon>
         </button>
     </footer>

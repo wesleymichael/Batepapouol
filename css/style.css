@@ -241,3 +241,16 @@ ul li ion-icon:last-child{
     font-size: 15px;
     font-weight: 900;
 }
+
+.reservado input{
+    height: 30px;
+}
+
+.reservado input::placeholder{
+    color: #000000;
+}
+
+.reservado span{
+    color: #a1a0a0;
+    font-size: 15px;
+}
