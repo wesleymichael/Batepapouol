@@ -145,18 +145,42 @@ footer input{
 
 
 /**** Estilização da barra de participantes ****/
-.nav{
+@keyframes menu-lateral{
+    from {
+        left: 100vw;
+    }
+    to {
+        left: 0vw;
+    }
+}
+
+@keyframes esconder-menu{
+    from {
+        left: 0vw;
+    }
+    to {
+        left: 100vw;
+    }
+}
+
+.nav, .display-hide{
     display: flex;
     position: fixed;
     top: 0;
-    left: 0vw;
+    /*left: 0vw;*/
     z-index: 5;
     height: 101vh;
     width: 100vw;
+    animation-duration: 1s;
+}
+
+.nav{
+    animation-name: menu-lateral;
 }
 
 .display-hide{
-    display: none;
+    left: 100vw;
+    animation-name: esconder-menu;
 }
 
 .dark{
@@ -172,19 +196,21 @@ footer input{
 }
 
 .conteudo ul li{
-    height: 36px;
-    padding: 0 18px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    height: 36px;
+    padding: 0 10px;
     font-size: 16px;
 }
 
 .conteudo ul ion-icon{
-    padding-right: 8px;
+    padding-right: 5px;
 }
 
 .conteudo ul{
-    max-height: 200px;
+    min-height: 120px;
+    max-height: 220px;
     overflow: auto;
 }
 
@@ -201,11 +227,8 @@ footer input{
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.conteudo ul span{
-    width: 75%;
-}
 
-/**** Seleção do parrticipante ****/
+/**** Seleção do participante ****/
 ul li ion-icon:last-child{
     display: none;
 }

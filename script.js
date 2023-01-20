@@ -9,6 +9,7 @@ function messageRecipient(recipient){
     to = recipient;
 }
 
+
 /**** Função que remove a classe 'selecionado' do item anteriormente selecionado e adicionada ao novo item ****/
 function selectUser(select){
     const user = document.querySelector('.users .selecionado');
@@ -32,22 +33,17 @@ function selectVisibility(select, messageType){
 }
 
 
-/**** Adicionar eventos na página ****/
-function events(){
-    if (document.querySelector('.login input') !== null){
-        document.querySelector('.login input').addEventListener('input', validateInput);
-    }
-
-    if (document.querySelector('.login button') !== null){
-        document.addEventListener("keypress", function(e) {
-            if( e.key === "Enter"){
-                document.querySelector('.login button').click();
-            }
-        });
-    }
+/**** Implementação do envio da mensagem com tecla Enter ****/
+function buttonEnterSendMEssage(){
+    document.addEventListener("keypress", function(e) {
+        if( e.key === "Enter"){
+            document.querySelector('footer button').click();
+        }
+    });
 }
 
 
+/**** Função para enconder/mostrar o menu lateral ****/
 function hideNav(){
     const hide = document.querySelector('.nav');
     hide.classList.remove('nav');
@@ -57,9 +53,9 @@ function hideNav(){
 
 /**** Função para mostrar a barra de navegação com informações do usuário ****/
 function navUsers(){
-    const aux = document.querySelector('.display-hide');
-    aux.classList.remove('display-hide');
-    aux.classList.add('nav');
+    const show = document.querySelector('.display-hide');
+    show.classList.remove('display-hide');
+    show.classList.add('nav');
 }
 
 
@@ -68,15 +64,18 @@ function sendSucess(){
     loadMessages();
 }
 
-function sendError(erro){
-    alert('Ocorreu um erro inexperado.')
-    window.location.reload()
+function sendError(){
+    alert('Ocorreu um erro inexperado.');
+    window.location.reload();
 }
 
 
-
+/**** Implementação do envio de mensagem para o servidor ****/
 function sendMessage(){
     const text = document.querySelector('footer input').value;
+
+    //Limpar input
+    document.querySelector('footer input').value = '';
 
     const dados = {
         'from': userName,
@@ -84,7 +83,6 @@ function sendMessage(){
         'text': text,
         'type': type,
     }
-    console.log(dados)
 
     const promise = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', dados);
     promise.then(sendSucess);
@@ -97,22 +95,25 @@ function renderUsersOnline(){
     let listUsers = document.querySelector('.users');
     listUsers.innerHTML = `
         <li onclick="selectUser(this)" class='selecionado'>
-            <ion-icon name="people"></ion-icon>
-            <span>Todos</span>
+            <div>
+                <ion-icon name="people"></ion-icon>
+                <span>Todos</span>
+            </div>
             <ion-icon name="checkmark-sharp"></ion-icon>
         </li>
     `
     for (let i = 0; i < usersOnline.length; i++){
         listUsers.innerHTML += `
         <li onclick="selectUser(this)">
-            <ion-icon name="person-circle"></ion-icon>
-            <span>${usersOnline[i].name}</span>
+            <div>
+                <ion-icon name="person-circle"></ion-icon>
+                <span>${usersOnline[i].name}</span>
+            </div>
             <ion-icon name="checkmark-sharp"></ion-icon>
         </li>  
         `
     }
 }
-
 
 
 /**** Função para obter a lista de participantes ativos no chat ****/
@@ -128,11 +129,8 @@ function loadUsers(){
 }
 
 
-
-
 /**** Função para renderizar as mensagens que estão no servidor ****/
 function loadMessagesSucess(sucess){
-    //Implementar sucesso - carregar mensagens do servidor
     const message = sucess.data;
     let conversation = document.querySelector('.conversation');
 
@@ -158,6 +156,7 @@ function loadMessagesSucess(sucess){
             </div>`;
         }
         else if (message[i].type === 'private_message'){
+            //Renderização da mensagem privada apenas se for destinada ao Usuário
             if(message[i].to === userName || message[i].to === 'Todos'){
                 conversation.innerHTML += `
                 <div class="msg private_message">
@@ -170,10 +169,15 @@ function loadMessagesSucess(sucess){
             }
         }
     }
+    //Direcionar a página para a última mensagem enviada
     document.querySelector('.conversation div:last-child').scrollIntoView();
-    //scrollIntoView    
 }
 
+
+function loadMessagesError(){
+    alert('Ocorreu algum erro no carregamento das mensagens do chat');
+    window.location.reload();
+}
 
 
 /**** Função para carregar as mensagens do servidor ****/
@@ -181,7 +185,7 @@ function loadMessages(){
     const promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
 
     promise.then(loadMessagesSucess);
-    //promise.catch(loadMessagesError);
+    promise.catch(loadMessagesError);
 }
 
 
@@ -207,13 +211,17 @@ function loadPage(){
             <div class="info">Escolha a visibilidade:</div>
             <ul class='visibility'>
                 <li onclick="selectVisibility(this, 'message')" class='selecionado'>
-                    <ion-icon name="lock-open"></ion-icon>
-                    <span>Público</span>
+                    <div>
+                        <ion-icon name="lock-open"></ion-icon>
+                        <span>Público</span>
+                    </div>
                     <ion-icon name="checkmark-sharp"></ion-icon>
                 </li>
                 <li onclick="selectVisibility(this, 'private_message')">
-                    <ion-icon name="lock-closed"></ion-icon>
-                    <span>Reservadamente</span>
+                    <div>
+                        <ion-icon name="lock-closed"></ion-icon>
+                        <span>Reservadamente</span>
+                    </div>
                     <ion-icon name="checkmark-sharp"></ion-icon>
                 </li>
             </ul>
@@ -231,7 +239,7 @@ function loadPage(){
 }
 
 
-/**** Função para informar ao servidor a cada 5 segundos que o usuário permanece conectado****/
+/**** Função para informar ao servidor a cada 5 segundos que o usuário permanece conectado ****/
 function userLogged(){
     axios.post('https://mock-api.driven.com.br/api/v6/uol/status', {name: userName});
 }
@@ -239,33 +247,27 @@ function userLogged(){
 
 function enterChat(){
 
-    setInterval(userLogged, 5000);
-    loadPage();
-    loadMessages();
-    setInterval(loadMessages, 3000);
-    loadUsers();
-    setInterval(loadUsers, 10000);
+    setInterval(userLogged, 5000);                        //Informar ao servidor que o usuário continua logado
+    loadPage();                                           //Carregar layout do chat
+    loadMessages();                                       //Carregar mensagens
+    setInterval(loadMessages, 3000);                      //Atualizar as mensagens a cada 3 segundos
+    loadUsers();                                          //Verificar os usuários logados
+    setInterval(loadUsers, 10000);                        //Atualizar usuários logados a cada 10 segundos
+    buttonEnterSendMEssage();                             //Adicionar evento na página para enviar mensagem com ENTER
 }
 
 
-///////////////////////////// INICIO DA IMPLEMENTAÇÃO DO CHAT (acima) ///////////////////////////////////////////////////
-
+////////////////////////////////////////------------IMPLEMENTAÇÃO DA PÁGINA DE LOGIN----------////////////////////////////////////////
 
 /**** Função para tratar resposta com sucesso ao enviar nome do usuário para o servidor ****/
 function userSucessRequest(sucess){
-    //Status = 200, usuário pode conectar. Ir para a página de mensagens
-    //Dúvida: sempre que eu precisar do meu nome de usuário preciso usar o GET??
-    //console.log(sucess.config.data);
-
-    /*sucess.config.data é uma string no formato JSON. Preciso formatar para objeto - JSON.parse(string) */
-
+    //Status = 200, usuário pode conectar
     userName = JSON.parse(sucess.config.data).name;
+
+    document.removeEventListener('keypress', loginEnter);
     
     //Com o nome do usuário, vou entrar na sala
     enterChat();
-
-    //window.location.href = "chat.html"
-    //Redirecionar para a página de mensagens
 
 }
 
@@ -273,24 +275,13 @@ function userSucessRequest(sucess){
 /**** Função para tratar erro do envio do nome do usuário para o servidor ****/
 function errorUser(erro){
     //Status 400 = nome de usuário já em uso
-    //Pedir pra escolher outro nome
     if (erro.request.status === 400){
         alert('Já existe alguém com esse nome.');
-        /*const login = document.querySelector('.login');
-        login.innerHTML = `
-            <input type="text" placeholder="Digite seu nome">
-            <button type="submit" name="button" onclick="logIn()" disabled>Entrar</button>
-        `;*/
         window.location.reload();
     }
     else{
         alert('Ocorreu um erro inexperado');
         window.location.reload();
-        /*const login = document.querySelector('.login');
-        login.innerHTML = `
-            <input type="text" placeholder="Digite seu nome">
-            <button type="submit" name="button" onclick="logIn()" disabled>Entrar</button>
-        `;*/
     }
 }
 
@@ -314,7 +305,6 @@ function logIn(){
 }
 
 
-
 /**** Função para habilitar o botão quando for digitado pelo menos 3 caracteres ****/
 function validateInput({target}){
     const button = document.querySelector('button');
@@ -323,4 +313,21 @@ function validateInput({target}){
         return;
     }
     button.setAttribute('disabled', '');
+}
+
+
+/**** Click com a tecla ENTER ****/
+function loginEnter(){
+    const obj = document.querySelector('.login button');
+    let tecla = event.key; 
+    if (tecla === 'Enter'){
+        obj.click();
+    }
+}
+
+
+/**** Adicionar eventos na página de login ****/
+function eventsLogin(){
+    document.querySelector('.login input').addEventListener('input', validateInput);
+    document.addEventListener("keypress", loginEnter);
 }
