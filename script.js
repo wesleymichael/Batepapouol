@@ -45,7 +45,22 @@ function events(){
             }
         });
     }
+}
 
+
+
+function hideNav(){
+    const hide = document.querySelector('.nav');
+    hide.classList.remove('nav');
+    hide.classList.add('display-hide');
+}
+
+
+/**** Função para mostrar a barra de navegação com informações do usuário ****/
+function navUsers(){
+    const aux = document.querySelector('.display-hide');
+    aux.classList.remove('display-hide');
+    aux.classList.add('nav');
 }
 
 
@@ -101,14 +116,6 @@ function loadMessages(){
 }
 
 
-/**** Função para mostrar a barra de navegação com informações do usuário ****/
-function sidebar(){
-    const aux = document.querySelector('.display-hide');
-    aux.classList.remove('display-hide');
-    aux.classList.add('nav');
-}
-
-
 /**** Função para carregar o layout da página do bate papo ****/
 function loadPage(){
     const page = document.querySelector('body');
@@ -116,14 +123,14 @@ function loadPage(){
     page.innerHTML = `
     <header>
         <img src="../img/uol.png" alt="uol">
-        <button type="text" onclick="sidebar()">
+        <button type="text" onclick="navUsers()">
             <ion-icon name="people"></ion-icon>
         </button>
     </header>
     <div class="conversation">
     </div>
     <div class="display-hide">
-        <div class="dark"></div>
+        <div class="dark" onclick="hideNav()"></div>
         <div class="conteudo">
             <div class="info">Escolha um contato para enviar mensagem:</div>
             <ul class='users'>
@@ -168,7 +175,7 @@ function loadPage(){
 }
 
 
-/**** Funçao para obter a lista de participantes ativos no chat ****/
+/**** Função para obter a lista de participantes ativos no chat ****/
 function loadUsersSucess(sucess){
     usersOnline = sucess.data;
 }
