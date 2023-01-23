@@ -166,7 +166,7 @@ function renderUsersOnline(){
                 <ion-icon name="people"></ion-icon>
                 <span>Todos</span>
             </div>
-            <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+            <ion-icon name="checkmark-sharp" data-test="check"></ion-icon>
         </li>
     `;
     for (let i = 0; i < usersOnline.length; i++){
@@ -181,7 +181,7 @@ function renderUsersOnline(){
                         <ion-icon name="person-circle"></ion-icon>
                         <span>${usuario}</span>
                     </div>
-                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+                    <ion-icon name="checkmark-sharp" data-test="check"></ion-icon>
                 </li>  
                 `;
             } else{
@@ -191,7 +191,7 @@ function renderUsersOnline(){
                         <ion-icon name="person-circle"></ion-icon>
                         <span>${usuario}</span>
                     </div>
-                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+                    <ion-icon name="checkmark-sharp" data-test="check"></ion-icon>
                 </li>  
                 `;
             }
@@ -301,14 +301,14 @@ function loadPage(){
                         <ion-icon name="lock-open"></ion-icon>
                         <span>Público</span>
                     </div>
-                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+                    <ion-icon name="checkmark-sharp" data-test="check"></ion-icon>
                 </li>
                 <li onclick="selectVisibility(this, 'private_message')" data-test="private">
                     <div>
                         <ion-icon name="lock-closed"></ion-icon>
                         <span>Reservadamente</span>
                     </div>
-                    <ion-icon name="checkmark-sharp" data-tes="check"></ion-icon>
+                    <ion-icon name="checkmark-sharp" data-test="check"></ion-icon>
                 </li>
             </ul>
         </div>
